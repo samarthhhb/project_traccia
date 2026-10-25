@@ -1,0 +1,2805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+  <link rel="shortcut icon" href="/static/favicon.png">
+  <title>TRACCIA | Database Management for Inventory & Disaster Response</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-page: #f2f7f4;
+      --surface-white: #ffffff;
+      
+      /* Brand Accents matched directly to Logo (Emerald / Deep Teal) */
+      --primary: #27906e;
+      --primary-dark: #00383b;
+      --primary-light: #e8f5f0;
+      --primary-hover: #1e7a5c;
+      
+      --accent-teal: #02383b;
+      --accent-teal-light: #e6f0ee;
+      --accent-blue: #0284c7;
+      --accent-blue-light: #e0f2fe;
+      --accent-green: #27906e;
+      --accent-green-light: #e8f5f0;
+      --accent-rose: #e11d48;
+      --accent-rose-light: #fff1f2;
+      --accent-amber: #d97706;
+      --accent-amber-light: #fffbeb;
+      --accent-purple: #7c3aed;
+      --accent-purple-light: #f5f3ff;
+
+      --text-heading: #042426;
+      --text-body: #2d4546;
+      --text-muted: #6f8a8b;
+      --border-color: #dce7e3;
+      --border-soft: #edf4f1;
+      
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.02);
+      --shadow-card: 0 4px 20px -2px rgba(2, 56, 59, 0.05);
+      --shadow-float: 0 12px 32px -4px rgba(2, 56, 59, 0.08);
+      --shadow-primary: 0 10px 25px -3px rgba(39, 144, 110, 0.32);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-body);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      letter-spacing: -0.011em;
+    }
+
+    /* ================= SIDEBAR ================= */
+    aside.sidebar {
+      width: 252px;
+      background: var(--surface-white);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      padding: 1.25rem 0.95rem;
+      z-index: 10;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-color) transparent;
+      flex-shrink: 0;
+    }
+    aside.sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    aside.sidebar::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      margin-bottom: 1.35rem;
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.18s ease;
+    }
+    .brand-container:hover {
+      opacity: 0.85;
+    }
+
+    .brand-logo-img {
+      height: 32px;
+      width: auto;
+      max-width: 195px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #02383b 0%, #27906e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.05rem;
+      box-shadow: 0 4px 10px rgba(39, 144, 110, 0.25);
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.4px;
+    }
+
+
+    .nav-group-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin: 1.2rem 0 0.35rem 0.65rem;
+    }
+    .nav-group-title:first-of-type {
+      margin-top: 0;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.55rem 0.8rem;
+      border-radius: var(--radius-md);
+      color: #557071;
+      font-size: 0.84rem;
+      font-weight: 600;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-bottom: 0.2rem;
+    }
+
+    .nav-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .nav-item:hover {
+      background: #f8fafc;
+      color: var(--text-heading);
+      transform: translateX(2px);
+    }
+
+    .nav-item.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: var(--shadow-primary);
+    }
+
+    .nav-item .tag {
+      margin-left: auto;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 0.15rem 0.4rem;
+      border-radius: 6px;
+    }
+    .nav-item.active .tag {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+    }
+    .nav-item:not(.active) .tag-sql {
+      background: var(--accent-blue-light);
+      color: var(--accent-blue);
+    }
+    .nav-item:not(.active) .tag-mongo {
+      background: var(--accent-green-light);
+      color: var(--accent-green);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 1.15rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .db-status-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-body);
+      background: #f8fafc;
+      padding: 0.6rem 0.8rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+
+    /* ================= MAIN WRAPPER ================= */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Top Navigation Bar */
+    header.topbar {
+      background: var(--surface-white);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .search-box {
+      position: relative;
+      width: 380px;
+    }
+    .search-box input {
+      width: 100%;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.6rem 1rem 0.6rem 2.5rem;
+      font-size: 0.85rem;
+      font-family: inherit;
+      color: var(--text-heading);
+      transition: all 0.2s ease;
+    }
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(39, 144, 110, 0.15);
+    }
+    .search-box svg {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      width: 16px;
+      height: 16px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #27906e 0%, #02383b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .user-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .user-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+
+    /* Page Canvas */
+    .page-canvas {
+      padding: 2.25rem;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Hero Banner */
+    .welcome-banner {
+      background: linear-gradient(135deg, #00272d 0%, #02383b 45%, #27906e 100%);
+      border-radius: var(--radius-xl);
+      padding: 2.25rem 2.5rem;
+      color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      box-shadow: 0 14px 34px -6px rgba(0, 39, 45, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome-banner::after {
+      content: '';
+      position: absolute;
+      right: -30px;
+      top: -30px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+    .welcome-text h2 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 0;
+      line-height: 1.2;
+    }
+    .welcome-text p {
+      font-size: 0.92rem;
+      color: #e0e7ff;
+      max-width: 600px;
+      line-height: 1.5;
+    }
+    .welcome-action {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+    .banner-btn {
+      background: #ffffff;
+      color: var(--primary);
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.2s ease;
+    }
+    .banner-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+
+    /* Metric Cards Grid (matches Reference Image 2) */
+    .section-headline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.15rem;
+    }
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.025em;
+    }
+    .view-all-link {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background: var(--surface-white);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: all 0.25s ease;
+    }
+    .kpi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-float);
+    }
+
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    .kpi-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .kpi-icon-pill {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .icon-rose { background: var(--accent-rose-light); color: var(--accent-rose); }
+    .icon-blue { background: var(--accent-blue-light); color: var(--accent-blue); }
+    .icon-purple { background: var(--accent-purple-light); color: var(--accent-purple); }
+    .icon-green { background: var(--accent-green-light); color: var(--accent-green); }
+
+    .kpi-number {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      letter-spacing: -0.5px;
+      margin-bottom: 0.35rem;
+    }
+
+    /* Content Cards / Tables */
+    .content-card {
+      background: var(--surface-white);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-card);
+      margin-bottom: 2rem;
+    }
+
+    .card-title-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+    .card-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Forms */
+    .form-panel {
+      background: #f8fafc;
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      border: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .field-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .field-wrap label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-heading);
+    }
+    .field-wrap input,
+    .field-wrap select,
+    .field-wrap textarea {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.6rem 0.85rem;
+      font-size: 0.85rem;
+      color: var(--text-heading);
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .field-wrap input:focus,
+    .field-wrap select:focus,
+    .field-wrap textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(39, 144, 110, 0.15);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.6rem 1.15rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    .btn-indigo {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(39, 144, 110, 0.25);
+    }
+    .btn-indigo:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+    .btn-emerald {
+      background: var(--accent-green);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    }
+    .btn-emerald:hover {
+      background: #059669;
+      transform: translateY(-1px);
+    }
+    .btn-rose {
+      background: var(--accent-rose-light);
+      color: var(--accent-rose);
+    }
+    .btn-rose:hover {
+      background: #ffe4e6;
+    }
+    .btn-outline {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      color: var(--text-heading);
+    }
+    .btn-outline:hover {
+      background: #f8fafc;
+    }
+    .btn-sm {
+      padding: 0.35rem 0.75rem;
+      font-size: 0.75rem;
+      border-radius: 6px;
+    }
+
+    /* Tables (Clean Light Theme from References) */
+    .table-responsive {
+      overflow-x: auto;
+    }
+    table.modern-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      text-align: left;
+      font-size: 0.84rem;
+    }
+    table.modern-table th {
+      background: #f8fafc;
+      color: #64748b;
+      font-weight: 700;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.85rem 1.15rem;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+    table.modern-table th:first-child { border-top-left-radius: 8px; border-bottom-left-radius: 8px; }
+    table.modern-table th:last-child { border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
+
+    table.modern-table td {
+      padding: 0.95rem 1.15rem;
+      border-bottom: 1px solid var(--border-soft);
+      color: var(--text-body);
+      vertical-align: middle;
+    }
+    table.modern-table tr:hover td {
+      background: #fbfcfe;
+    }
+
+    .code-chip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      background: #f1f5f9;
+      color: #334155;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    /* Status Pills */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .pill-green { background: var(--accent-green-light); color: var(--accent-green); }
+    .pill-rose { background: var(--accent-rose-light); color: var(--accent-rose); }
+    .pill-amber { background: var(--accent-amber-light); color: var(--accent-amber); }
+    .pill-blue { background: var(--accent-blue-light); color: var(--accent-blue); }
+    .pill-purple { background: var(--accent-purple-light); color: var(--accent-purple); }
+
+    /* Alert Banner */
+    .toast-alert {
+      position: fixed;
+      bottom: 2rem;
+      right: 2.5rem;
+      padding: 0.85rem 1.35rem;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+      display: none;
+      z-index: 1000;
+      box-shadow: var(--shadow-float);
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .toast-alert.success { background: #059669; display: flex; align-items: center; gap: 0.5rem; }
+    .toast-alert.error { background: #e11d48; display: flex; align-items: center; gap: 0.5rem; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-dialog {
+      background: #ffffff;
+      border-radius: var(--radius-xl);
+      width: 90%;
+      max-width: 580px;
+      padding: 2rem;
+      box-shadow: var(--shadow-float);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .timeline {
+      border-left: 2px solid var(--border-color);
+      padding-left: 1.25rem;
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .timeline-node {
+      position: relative;
+    }
+    .timeline-node::before {
+      content: '';
+      position: absolute;
+      left: -1.65rem;
+      top: 0.25rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    .dataset-pill {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      background: var(--surface-white);
+      border: 1px solid var(--border-color);
+      padding: 0.35rem 0.75rem;
+      border-radius: 20px;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .dataset-pill:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+      transform: translateY(-1px);
+    }
+
+    /* ================= ABOUT DATASET PAGE STYLES ================= */
+    .dataset-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .ds-card {
+      background: var(--surface-white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-card);
+      padding: 1.45rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .ds-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-float);
+      border-color: var(--primary);
+    }
+    .ds-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.85rem;
+    }
+    .ds-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+    }
+    .ds-card-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      margin-bottom: 0.35rem;
+      line-height: 1.3;
+    }
+    .ds-card-desc {
+      font-size: 0.82rem;
+      color: var(--text-body);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .ds-card-params {
+      background: #f8fafc;
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      margin-bottom: 1.15rem;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .ds-param-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.76rem;
+    }
+    .ds-param-k {
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .ds-param-v {
+      color: var(--text-heading);
+      font-weight: 700;
+    }
+
+    /* River Gauge Visualizer Bar */
+    .gauge-card {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.15rem;
+      margin-bottom: 0.85rem;
+      transition: all 0.2s ease;
+    }
+    .gauge-card:hover {
+      background: #ffffff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+    .gauge-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .gauge-track {
+      position: relative;
+      height: 14px;
+      background: #e2e8f0;
+      border-radius: 7px;
+      overflow: hidden;
+      margin-bottom: 0.45rem;
+    }
+    .gauge-fill {
+      height: 100%;
+      border-radius: 7px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .gauge-fill-normal { background: linear-gradient(90deg, #10b981 0%, #059669 100%); }
+    .gauge-fill-warning { background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%); }
+    .gauge-fill-danger { background: linear-gradient(90deg, #f43f5e 0%, #e11d48 100%); }
+    .gauge-meta-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    /* Pipeline Diagram */
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+    @media (max-width: 960px) {
+      .pipeline-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .pipeline-grid { grid-template-columns: 1fr; }
+    }
+    .pipeline-step {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .pipeline-step:hover {
+      background: #ffffff;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+      border-color: var(--primary);
+    }
+    .pipeline-step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.65rem;
+    }
+    .pipeline-step-title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--text-heading);
+      margin-bottom: 0.35rem;
+    }
+    .pipeline-step-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar">
+    <div class="brand-container" onclick="activateTab('dashboard')" title="Go to Dashboard">
+      <img src="/static/logo.png" alt="Traccia" class="brand-logo-img">
+    </div>
+
+    <div class="nav-group-title">Overview</div>
+    <button class="nav-item active" onclick="activateTab('dashboard')">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+      Dashboard
+    </button>
+
+    <div class="nav-group-title">Inventory</div>
+    <button class="nav-item" onclick="activateTab('products')">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+      Supplies Catalog
+    </button>
+    <button class="nav-item" onclick="activateTab('inventory')">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+      Stock Positions
+    </button>
+    <button class="nav-item" onclick="activateTab('transactions')">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+      Transactions
+    </button>
+    <button class="nav-item" onclick="activateTab('reports')">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+      Analytics
+    </button>
+
+    <div class="nav-group-title">Beneficiaries</div>
+    <button class="nav-item" onclick="activateTab('consumers')">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+      Profiles
+    </button>
+    <button class="nav-item" onclick="activateTab('grievances')">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
+      Grievances
+    </button>
+
+    <div class="nav-group-title">Intelligence</div>
+    <button class="nav-item" onclick="activateTab('dataset')">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+      Datasets
+    </button>
+    <button class="nav-item" onclick="activateTab('disaster')">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+      Telemetry & Incidents
+    </button>
+  </aside>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <div class="main-content">
+    
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="search-box">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <input type="text" placeholder="Search SKU, ID, or ticket...">
+      </div>
+      <div class="user-profile">
+        <div class="avatar">SO</div>
+        <div class="user-info">
+          <span class="user-name">Staff Operator</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="page-canvas">
+
+      <!-- ================= 1. DASHBOARD TAB ================= -->
+      <section id="tab-dashboard" class="tab-content active">
+        
+        <!-- Welcome Hero Banner -->
+        <div class="welcome-banner">
+          <div class="welcome-text">
+            <h2>Disaster Response & Relief Hub</h2>
+            <p style="font-size: 0.88rem; color: #e2e8f0; margin-top: 0.35rem; max-width: 600px;">
+              Unified relief inventory, logistics dispatch, and grievance tracking.
+            </p>
+            <div class="welcome-action" style="margin-top: 0.85rem; display: flex; gap: 0.65rem;">
+              <button class="banner-btn" onclick="activateTab('transactions')">Record Dispatch</button>
+              <button class="banner-btn" style="background: rgba(255,255,255,0.18);" onclick="activateTab('dataset')">View Datasets</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Metric Cards -->
+        <div class="section-headline">
+          <div class="section-title">System Metrics</div>
+          <span class="view-all-link" onclick="loadDashboard()">Refresh</span>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Stock Positions</span>
+              <div class="kpi-icon-pill icon-blue">📦</div>
+            </div>
+            <div class="kpi-number" id="dash-stock-count">--</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Low Stock Alerts</span>
+              <div class="kpi-icon-pill icon-rose">⚠️</div>
+            </div>
+            <div class="kpi-number" id="dash-low-stock" style="color: var(--accent-rose);">--</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Active Grievances</span>
+              <div class="kpi-icon-pill icon-green">🎫</div>
+            </div>
+            <div class="kpi-number" id="dash-grievances" style="color: var(--accent-amber);">--</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Gauge Alerts</span>
+              <div class="kpi-icon-pill icon-rose">🌊</div>
+            </div>
+            <div class="kpi-number" id="dash-cwc-alerts" style="color: var(--accent-rose);">--</div>
+          </div>
+        </div>
+
+        <!-- Low Stock Alert Table -->
+        <div class="content-card">
+          <div class="card-title-bar">
+            <div class="card-title">
+              <span>Critical Stock Deficits</span>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>SKU</th>
+                  <th>Warehouse / Store</th>
+                  <th>On Hand</th>
+                  <th>Reorder Level</th>
+                  <th>Stock Deficit</th>
+                </tr>
+              </thead>
+              <tbody id="dash-low-stock-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Priority Grievances Table -->
+        <div class="content-card">
+          <div class="card-title-bar">
+            <div class="card-title">
+              <span>Recent Grievances</span>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>Consumer</th>
+                  <th>Category</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Assigned Team</th>
+                </tr>
+              </thead>
+              <tbody id="dash-grievance-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. PRODUCTS TAB ================= -->
+      <section id="tab-products" class="tab-content">
+        <div class="content-card">
+          <div class="card-title-bar">
+            <div class="card-title">Add Product</div>
+          </div>
+          <form onsubmit="handleCreateProduct(event)" class="form-panel">
+            <div class="form-row">
+              <div class="field-wrap">
+                <label>Product Name</label>
+                <input type="text" id="p-name" placeholder="e.g. Dry Rations Pack (10-Day)" required>
+              </div>
+              <div class="field-wrap">
+                <label>Category</label>
+                <input type="text" id="p-cat" placeholder="e.g. Food & Nutrition" required>
+              </div>
+              <div class="field-wrap">
+                <label>SKU</label>
+                <input type="text" id="p-sku" placeholder="e.g. REL-RAT-10D" required>
+              </div>
+              <div class="field-wrap">
+                <label>Unit Value (₹)</label>
+                <input type="number" step="0.01" id="p-price" placeholder="0.00" min="0" required>
+              </div>
+            </div>
+            <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
+              <button type="submit" class="btn btn-indigo">Add Product</button>
+            </div>
+          </form>
+
+          <div class="card-title-bar" style="margin-top: 1.5rem;">
+            <div class="card-title">Product Catalog</div>
+            <button class="btn btn-sm btn-outline" onclick="loadProducts()">Refresh</button>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Product Name</th>
+                  <th>Category</th>
+                  <th>SKU</th>
+                  <th>Unit Price</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="products-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. INVENTORY TAB ================= -->
+      <section id="tab-inventory" class="tab-content">
+        <div class="content-card">
+          <div class="card-title-bar">
+            <div class="card-title">Warehouse Stock Positions</div>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>SKU</th>
+                  <th>Unit Price</th>
+                  <th>Location</th>
+                  <th>On Hand</th>
+                  <th>Reorder Level</th>
+                  <th>Stock Health</th>
+                </tr>
+              </thead>
+              <tbody id="inventory-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. TRANSACTIONS TAB ================= -->
+      <section id="tab-transactions" class="tab-content">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+          
+          <!-- Purchase Form -->
+          <div class="content-card" style="margin-bottom: 0;">
+            <div class="card-title-bar">
+              <div class="card-title">Inbound Procurement</div>
+            </div>
+            <form onsubmit="handlePurchase(event)">
+              <div class="field-wrap" style="margin-bottom: 0.85rem;">
+                <label>Supplier</label>
+                <select id="po-supplier" required></select>
+              </div>
+              <div class="field-wrap" style="margin-bottom: 0.85rem;">
+                <label>Product</label>
+                <select id="po-product" required></select>
+              </div>
+              <div class="field-wrap" style="margin-bottom: 0.85rem;">
+                <label>Destination</label>
+                <select id="po-location" required></select>
+              </div>
+              <div class="field-wrap" style="margin-bottom: 1.25rem;">
+                <label>Quantity</label>
+                <input type="number" id="po-qty" min="1" value="25" required>
+              </div>
+              <button type="submit" class="btn btn-emerald" style="width: 100%;">Record Purchase</button>
+            </form>
+          </div>
+
+          <!-- Sale Form -->
+          <div class="content-card" style="margin-bottom: 0;">
+            <div class="card-title-bar">
+              <div class="card-title">Relief Distribution</div>
+            </div>
+            <form onsubmit="handleSale(event)">
+              <div class="field-wrap" style="margin-bottom: 0.85rem;">
+                <label>Product</label>
+                <select id="sale-product" required></select>
+              </div>
+              <div class="field-wrap" style="margin-bottom: 0.85rem;">
+                <label>Location</label>
+                <select id="sale-location" required></select>
+              </div>
+              <div class="field-wrap" style="margin-bottom: 0.85rem;">
+                <label>Beneficiary</label>
+                <select id="sale-consumer"></select>
+              </div>
+              <div class="field-wrap" style="margin-bottom: 1.25rem;">
+                <label>Quantity</label>
+                <input type="number" id="sale-qty" min="1" value="2" required>
+              </div>
+              <button type="submit" class="btn btn-indigo" style="width: 100%;">Record Distribution</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Stock Transfer / Adjustment Form -->
+        <div class="content-card" style="margin-bottom: 1.5rem;">
+          <div class="card-title-bar">
+            <div class="card-title">Stock Movement</div>
+          </div>
+          <form onsubmit="handleMovement(event)" class="form-panel" style="margin-bottom: 0;">
+            <div class="form-row">
+              <div class="field-wrap">
+                <label>Product</label>
+                <select id="sm-product" required></select>
+              </div>
+              <div class="field-wrap">
+                <label>Type</label>
+                <select id="sm-type">
+                  <option value="TRANSFER">Transfer</option>
+                  <option value="RETURN">Return</option>
+                  <option value="ADJUSTMENT">Adjustment</option>
+                </select>
+              </div>
+              <div class="field-wrap" id="wrap-from-loc">
+                <label>Source Location</label>
+                <select id="sm-from-loc"></select>
+              </div>
+              <div class="field-wrap" id="wrap-to-loc">
+                <label>Target Location</label>
+                <select id="sm-to-loc"></select>
+              </div>
+              <div class="field-wrap">
+                <label>Quantity</label>
+                <input type="number" id="sm-qty" min="1" value="5" required>
+              </div>
+            </div>
+            <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
+              <button type="submit" class="btn btn-indigo">Transfer Stock</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Recent Audit Trail of Transactions -->
+        <div class="content-card">
+          <div class="card-title-bar">
+            <div class="card-title">Recent Transactions</div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <select id="tx-log-type" onchange="loadRecentTransactions()" style="padding: 0.35rem 0.65rem; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.78rem;">
+                <option value="all">All Transactions</option>
+                <option value="purchases">Purchases</option>
+                <option value="sales">Distributions</option>
+                <option value="movements">Movements</option>
+              </select>
+              <button class="btn btn-sm btn-outline" onclick="loadRecentTransactions()">Refresh</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Type</th>
+                  <th>Product</th>
+                  <th>SKU</th>
+                  <th>Quantity</th>
+                  <th>Source / Destination</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody id="tx-recent-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 5. SQL REPORTS TAB ================= -->
+      <section id="tab-reports" class="tab-content">
+        <div class="content-card">
+          <div class="card-title-bar">
+            <div class="card-title">Stock by Location</div>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Location ID</th>
+                  <th>Location Name</th>
+                  <th>Distinct Products</th>
+                  <th>Total Units</th>
+                </tr>
+              </thead>
+              <tbody id="rep-loc-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-title-bar">
+            <div class="card-title">Supplier Procurement Volume</div>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Supplier ID</th>
+                  <th>Supplier Name</th>
+                  <th>Orders</th>
+                  <th>Total Units</th>
+                </tr>
+              </thead>
+              <tbody id="rep-sup-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-title-bar">
+            <div class="card-title">Distribution Value by Product</div>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>SKU</th>
+                  <th>Category</th>
+                  <th>Units Dispatched</th>
+                  <th>Total Value</th>
+                </tr>
+              </thead>
+              <tbody id="rep-sales-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 6. BENEFICIARIES TAB ================= -->
+      <section id="tab-consumers" class="tab-content">
+        <!-- Key Metrics Strip for Consumers -->
+        <div class="kpi-grid" style="margin-bottom: 1.5rem; grid-template-columns: repeat(3, 1fr);">
+          <div class="kpi-card">
+            <div class="kpi-header"><span class="kpi-label">Total Profiles</span></div>
+            <div class="kpi-number" id="cons-metric-total">--</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header"><span class="kpi-label">Verified</span></div>
+            <div class="kpi-number" id="cons-metric-verified" style="color: var(--accent-green);">--</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header"><span class="kpi-label">Pending</span></div>
+            <div class="kpi-number" id="cons-metric-pending" style="color: var(--accent-amber);">--</div>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-title-bar">
+            <div class="card-title">Onboard Beneficiary</div>
+          </div>
+          <form onsubmit="handleCreateConsumer(event)" class="form-panel">
+            <div class="form-row">
+              <div class="field-wrap">
+                <label>Beneficiary ID</label>
+                <input type="text" id="c-id" placeholder="e.g. BEN-IND-1005" required>
+              </div>
+              <div class="field-wrap">
+                <label>Full Name</label>
+                <input type="text" id="c-name" placeholder="Full name" required>
+              </div>
+              <div class="field-wrap">
+                <label>Contact</label>
+                <input type="text" id="c-contact" placeholder="Phone or contact" required>
+              </div>
+              <div class="field-wrap">
+                <label>District</label>
+                <input type="text" id="c-district" placeholder="District or sector">
+              </div>
+              <div class="field-wrap">
+                <label>Disaster Event</label>
+                <select id="c-event">
+                  <option value="NEP-2021-MELAMCHI">2021 Melamchi Flood (Nepal)</option>
+                  <option value="IND-2019-BIHAR">2019 North Bihar Flood</option>
+                  <option value="IND-2018-KERALA">2018 Great Kerala Flood</option>
+                  <option value="IND-2020-ASSAM">2020 Assam Brahmaputra Flood</option>
+                  <option value="IND-2021-UTTARAKHAND">2021 Chamoli Disaster</option>
+                </select>
+              </div>
+              <div class="field-wrap">
+                <label>Vulnerability</label>
+                <select id="c-vuln">
+                  <option value="GENERAL">General Beneficiary</option>
+                  <option value="DISPLACED_FAMILY">Displaced Evacuee Family</option>
+                  <option value="FEMALE_HEADED_HOUSEHOLD">Female-Headed Household</option>
+                  <option value="ELDERLY">Elderly / High Medical Need</option>
+                  <option value="CHILD_CARE">Infant / Child Care</option>
+                </select>
+              </div>
+              <div class="field-wrap">
+                <label>Notes / Ration ID</label>
+                <input type="text" id="c-prefs" placeholder="Ration card or notes">
+              </div>
+              <div class="field-wrap">
+                <label>Camp / Address</label>
+                <input type="text" id="c-addr" placeholder="Camp or shelter location">
+              </div>
+            </div>
+            <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
+              <button type="submit" class="btn btn-emerald">Register Beneficiary</button>
+            </div>
+          </form>
+
+          <div class="card-title-bar" style="margin-top: 1.5rem;">
+            <div class="card-title">Beneficiary Directory</div>
+            <div style="display: flex; gap: 0.65rem; align-items: center;">
+              <input type="text" id="search-consumers" oninput="renderConsumers()" placeholder="Search beneficiaries..." style="padding: 0.38rem 0.75rem; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.8rem; width: 220px;">
+              <select id="filter-c-status" onchange="renderConsumers()" style="padding: 0.38rem 0.65rem; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.78rem;">
+                <option value="">All Statuses</option>
+                <option value="VERIFIED">VERIFIED</option>
+                <option value="PENDING">PENDING</option>
+              </select>
+              <button class="btn btn-sm btn-outline" onclick="loadConsumers()">Refresh</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Contact</th>
+                  <th>Notes</th>
+                  <th>Status</th>
+                  <th>Onboarded</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="consumers-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 7. GRIEVANCES TAB ================= -->
+      <section id="tab-grievances" class="tab-content">
+        <!-- Grievances Queue Summary Cards -->
+        <div class="kpi-grid" style="margin-bottom: 1.5rem;">
+          <div class="kpi-card">
+            <div class="kpi-header"><span class="kpi-label">Total Tickets</span></div>
+            <div class="kpi-number" id="grv-metric-total">--</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header"><span class="kpi-label">Open</span></div>
+            <div class="kpi-number" id="grv-metric-open" style="color: var(--accent-rose);">--</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header"><span class="kpi-label">In Progress</span></div>
+            <div class="kpi-number" id="grv-metric-prog" style="color: var(--accent-amber);">--</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-header"><span class="kpi-label">Resolved</span></div>
+            <div class="kpi-number" id="grv-metric-resolved" style="color: var(--accent-green);">--</div>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-title-bar">
+            <div class="card-title">File Grievance</div>
+          </div>
+          <form onsubmit="handleCreateGrievance(event)" class="form-panel">
+            <div class="form-row">
+              <div class="field-wrap">
+                <label>Grievance ID</label>
+                <input type="text" id="g-id" placeholder="e.g. GRV-2026-003" required>
+              </div>
+              <div class="field-wrap">
+                <label>Beneficiary</label>
+                <select id="g-consumer-id" required></select>
+              </div>
+              <div class="field-wrap">
+                <label>Category</label>
+                <select id="g-category">
+                  <option value="DRINKING_WATER">Drinking Water & Water Purification</option>
+                  <option value="FOOD_RATIONS">Emergency Dry Rations</option>
+                  <option value="EMERGENCY_SHELTER">Family Relief Tents & Tarpaulins</option>
+                  <option value="TRAUMA_MEDICINE">Trauma Medical Supplies & First Aid</option>
+                  <option value="RESCUE_ASSISTANCE">Rescue Boat & Evacuation</option>
+                  <option value="INFRASTRUCTURE_HAZARD">River Erosion / Damaged Bridge</option>
+                  <option value="RELIEF_KIT_DAMAGE">Damaged Relief Kit Replacement</option>
+                </select>
+              </div>
+              <div class="field-wrap">
+                <label>Priority</label>
+                <select id="g-priority">
+                  <option value="LOW">LOW</option>
+                  <option value="MEDIUM" selected>MEDIUM</option>
+                  <option value="HIGH">HIGH</option>
+                  <option value="CRITICAL">CRITICAL</option>
+                </select>
+              </div>
+              <div class="field-wrap">
+                <label>Disaster Event</label>
+                <select id="g-event">
+                  <option value="NEP-2021-MELAMCHI">2021 Melamchi Flood (Nepal)</option>
+                  <option value="IND-2019-BIHAR">2019 North Bihar Flood</option>
+                  <option value="IND-2018-KERALA">2018 Great Kerala Flood</option>
+                  <option value="IND-2020-ASSAM">2020 Assam Brahmaputra Flood</option>
+                  <option value="IND-2021-UTTARAKHAND">2021 Chamoli Disaster</option>
+                </select>
+              </div>
+              <div class="field-wrap">
+                <label>Location</label>
+                <input type="text" id="g-loc" placeholder="Camp or ward location">
+              </div>
+              <div class="field-wrap">
+                <label>Assigned Unit</label>
+                <input type="text" id="g-team" placeholder="Assigned relief team" required>
+              </div>
+            </div>
+            <div class="field-wrap" style="margin-top: 0.85rem;">
+              <label>Description</label>
+              <textarea id="g-desc" rows="2" placeholder="Details of the relief request..." required></textarea>
+            </div>
+            <div style="margin-top: 1rem; display: flex; justify-content: flex-end;">
+              <button type="submit" class="btn btn-indigo">Submit Grievance</button>
+            </div>
+          </form>
+
+          <div class="card-title-bar" style="margin-top: 1.5rem;">
+            <div class="card-title">Grievance Queue</div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <input type="text" id="search-grievances" oninput="renderGrievances()" placeholder="Search grievances..." style="padding: 0.38rem 0.75rem; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.8rem; width: 220px;">
+              <select id="filter-g-status" onchange="loadGrievances()" style="padding: 0.38rem 0.65rem; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.78rem;">
+                <option value="">All Statuses</option>
+                <option value="OPEN">OPEN</option>
+                <option value="IN_PROGRESS">IN_PROGRESS</option>
+                <option value="RESOLVED">RESOLVED</option>
+              </select>
+              <select id="filter-g-prio" onchange="loadGrievances()" style="padding: 0.38rem 0.65rem; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.78rem;">
+                <option value="">All Priorities</option>
+                <option value="LOW">LOW</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="HIGH">HIGH</option>
+                <option value="CRITICAL">CRITICAL</option>
+              </select>
+              <button class="btn btn-sm btn-outline" onclick="loadGrievances()">Refresh</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>Consumer</th>
+                  <th>Category</th>
+                  <th>Description</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Assigned Team</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="grievances-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 8. DATASETS TAB ================= -->
+      <section id="tab-dataset" class="tab-content">
+
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.35rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.2rem;">
+              Datasets
+            </h2>
+            <p style="font-size: 0.84rem; color: var(--text-muted);">
+              Hydrological telemetry and historical flood impact records.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.45rem; flex-wrap: wrap;">
+            <button class="btn btn-indigo" onclick="activateTab('disaster')">
+              Overview & Telemetry &rarr;
+            </button>
+            <button class="btn btn-outline" onclick="loadDatasetPage()">Refresh</button>
+          </div>
+        </div>
+
+        <!-- 1. Dataset Cards -->
+        <div class="dataset-grid-3" style="margin-bottom: 1.25rem;">
+          <!-- Card 1: Nepal Melamchi -->
+          <div class="ds-card">
+            <div>
+              <div class="ds-card-header">
+                <div class="ds-card-icon" style="background: var(--accent-teal-light); color: var(--primary);">
+                  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 20l7-13 4 7 3-5 4 11H3z"></path></svg>
+                </div>
+                <span class="pill pill-green">HydroShare CUAHSI</span>
+              </div>
+              <div class="ds-card-title">Nepal-FRES: 2021 Melamchi Flood</div>
+              <p class="ds-card-desc">
+                Field telemetry, landslide breach tracking, and debris flow aggradation from Sindhupalchok, Nepal.
+              </p>
+              <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6;">
+                <div><strong>Basin:</strong> Melamchi-Indrawati</div>
+                <div><strong>Impact:</strong> 2,600 displaced, 25 casualties</div>
+                <div><strong>Gauge:</strong> <span class="code-chip">CWC-NEP-MEL-01</span></div>
+              </div>
+            </div>
+            <div>
+              <a href="https://hydroshare.cuahsi.org/resource/b6da096000284d5882d13b085b7669ac/" target="_blank" class="dataset-pill">
+                HydroShare Resource &nearr;
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 2: India Flood Inventory -->
+          <div class="ds-card">
+            <div>
+              <div class="ds-card-header">
+                <div class="ds-card-icon" style="background: var(--accent-blue-light); color: var(--accent-blue);">
+                  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                </div>
+                <span class="pill pill-blue">Zenodo Archive</span>
+              </div>
+              <div class="ds-card-title">India Flood Inventory (1967–2023)</div>
+              <p class="ds-card-desc">
+                Historical database of inundation extents, population displacement, and impacts across Indian river basins.
+              </p>
+              <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6;">
+                <div><strong>Regions:</strong> Assam, Bihar, Kerala, Uttarakhand</div>
+                <div><strong>Impact:</strong> 15.9M+ displaced population</div>
+                <div><strong>Bindings:</strong> Relief dispatch records</div>
+              </div>
+            </div>
+            <div>
+              <a href="https://zenodo.org/records/16994648" target="_blank" class="dataset-pill">
+                Zenodo Archive &nearr;
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 3: CWC Telemetry -->
+          <div class="ds-card">
+            <div>
+              <div class="ds-card-header">
+                <div class="ds-card-icon" style="background: var(--accent-rose-light); color: var(--accent-rose);">
+                  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <span class="pill pill-rose">NWIC / CWC</span>
+              </div>
+              <div class="ds-card-title">CWC River Gauge Telemetry</div>
+              <p class="ds-card-desc">
+                Automated hourly river gauge telemetry providing river stage, rainfall, and danger mark alerts.
+              </p>
+              <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6;">
+                <div><strong>Provider:</strong> Central Water Commission (NWIC)</div>
+                <div><strong>Frequency:</strong> Hourly telemetry updates</div>
+                <div><strong>Thresholds:</strong> River stage vs danger mark</div>
+              </div>
+            </div>
+            <div>
+              <a href="https://nwdp.nwic.gov.in/dataset/rainfall-cwc-telemetry-hourly" target="_blank" class="dataset-pill">
+                NWIC Portal &nearr;
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Visual Gauge Comparison -->
+        <div class="content-card" style="margin-bottom: 1.25rem;">
+          <div class="card-title-bar">
+            <div class="card-title" style="font-size: 0.95rem;">
+              <span>River Stage vs Danger Marks</span>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="loadDatasetPage()">Refresh</button>
+          </div>
+          <div id="dataset-gauge-meters"></div>
+        </div>
+
+        <!-- 3. Comparative Disaster Scale -->
+        <div class="content-card" style="margin-bottom: 1.25rem;">
+          <div class="card-title-bar">
+            <div class="card-title" style="font-size: 0.95rem;">
+              <span>Disaster Scale & Population Impact</span>
+            </div>
+          </div>
+          <div id="dataset-disaster-bars"></div>
+        </div>
+
+        <!-- 4. Data Pipeline Diagram -->
+        <div class="content-card">
+          <div class="card-title-bar">
+            <div class="card-title" style="font-size: 0.95rem;">
+              <span>Data Pipeline</span>
+            </div>
+          </div>
+          <div class="pipeline-grid">
+            <div class="pipeline-step">
+              <div class="pipeline-step-num">1</div>
+              <div class="pipeline-step-title">Ingestion</div>
+              <div class="pipeline-step-desc">
+                Hourly rainfall and river stage feeds from telemetry stations and disaster records.
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-num">2</div>
+              <div class="pipeline-step-title">Validation</div>
+              <div class="pipeline-step-desc">
+                Automated threshold checks, water level deltas, and alert classification.
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-num">3</div>
+              <div class="pipeline-step-title">Persistence</div>
+              <div class="pipeline-step-desc">
+                Structured inventory storage and beneficiary grievance records.
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-num">4</div>
+              <div class="pipeline-step-title">Operations</div>
+              <div class="pipeline-step-desc">
+                Live river monitoring, deficit warnings, and coordinated relief distribution.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================= 9. DISASTER & FLOOD INTELLIGENCE TAB ================= -->
+      <section id="tab-disaster" class="tab-content">
+
+        <!-- Simplified Header with Dataset Links -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+          <div>
+            <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-heading); margin-bottom: 0.2rem;">
+              Telemetry & Incidents
+            </h2>
+            <p style="font-size: 0.84rem; color: var(--text-muted);">
+              Live hydrological gauge telemetry and disaster operations records.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.45rem; flex-wrap: wrap;">
+            <a href="https://hydroshare.cuahsi.org/resource/b6da096000284d5882d13b085b7669ac/" target="_blank" class="dataset-pill">
+              Nepal Melamchi &nearr;
+            </a>
+            <a href="https://zenodo.org/records/16994648" target="_blank" class="dataset-pill">
+              India Flood Inventory &nearr;
+            </a>
+            <a href="https://nwdp.nwic.gov.in/dataset/rainfall-cwc-telemetry-hourly" target="_blank" class="dataset-pill">
+              CWC Telemetry &nearr;
+            </a>
+          </div>
+        </div>
+
+        <!-- 1. CWC Telemetry: Compact, Clean Table -->
+        <div class="content-card" style="margin-bottom: 1.25rem;">
+          <div class="card-title-bar">
+            <div class="card-title" style="font-size: 0.95rem;">
+              <span>River Gauge Telemetry</span>
+            </div>
+            <button class="btn btn-sm btn-outline" onclick="loadDisasterIntelligence()">Refresh</button>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Station</th>
+                  <th>Basin & State</th>
+                  <th>Hourly Rain</th>
+                  <th>24h Total</th>
+                  <th>Water Level / Danger Mark</th>
+                  <th>Alert Level</th>
+                </tr>
+              </thead>
+              <tbody id="telemetry-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. Unified Flood Incidents & Cross-Database Operations Table -->
+        <div class="content-card">
+          <div class="card-title-bar">
+            <div class="card-title" style="font-size: 0.95rem;">
+              <span>Flood Incidents & Relief Operations</span>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>Event ID</th>
+                  <th>Incident Name</th>
+                  <th>Region & Basin</th>
+                  <th>Severity</th>
+                  <th>Displaced Pop.</th>
+                  <th>Relief Dispatched</th>
+                  <th>Beneficiaries & Desk</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody id="unified-disaster-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Update Grievance Modal -->
+  <div id="modal-g-overlay" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="modal-g-title" style="font-size: 1.15rem; font-weight: 800; color: var(--text-heading);">Manage Grievance</h3>
+        <button class="btn btn-sm btn-rose" onclick="closeGrievanceModal()">&times;</button>
+      </div>
+      <form onsubmit="handleUpdateGrievance(event)">
+        <input type="hidden" id="modal-g-id">
+        <div class="field-wrap" style="margin-bottom: 0.85rem;">
+          <label>Status</label>
+          <select id="modal-g-status">
+            <option value="OPEN">OPEN</option>
+            <option value="IN_PROGRESS">IN_PROGRESS</option>
+            <option value="RESOLVED">RESOLVED</option>
+          </select>
+        </div>
+        <div class="field-wrap" style="margin-bottom: 0.85rem;">
+          <label>Assigned Unit</label>
+          <input type="text" id="modal-g-team">
+        </div>
+        <div class="field-wrap" style="margin-bottom: 0.85rem;">
+          <label>Resolution Summary</label>
+          <input type="text" id="modal-g-resolution" placeholder="Resolution details or actions taken...">
+        </div>
+        <div class="field-wrap" style="margin-bottom: 1.25rem;">
+          <label>Progress Note</label>
+          <textarea id="modal-g-note" rows="2" placeholder="Describe action taken..."></textarea>
+        </div>
+
+        <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-heading); margin-bottom: 0.5rem;">Activity History</div>
+        <div class="timeline" id="modal-g-timeline"></div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-outline" onclick="closeGrievanceModal()">Cancel</button>
+          <button type="submit" class="btn btn-emerald">Save Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Alert -->
+  <div id="toast" class="toast-alert"></div>
+
+  <script>
+    let productsCache = [];
+    let suppliersCache = [];
+    let locationsCache = [];
+    let consumersCache = [];
+
+    function showToast(msg, isError = false) {
+      const t = document.getElementById('toast');
+      t.className = 'toast-alert ' + (isError ? 'error' : 'success');
+      t.textContent = msg;
+      setTimeout(() => { t.className = 'toast-alert'; }, 4000);
+    }
+
+    function activateTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+      const target = document.getElementById(`tab-${tabId}`);
+      if (target) target.classList.add('active');
+
+      const btns = Array.from(document.querySelectorAll('.nav-item'));
+      const activeBtn = btns.find(b => b.getAttribute('onclick')?.includes(tabId));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (tabId === 'dashboard') loadDashboard();
+      if (tabId === 'products') loadProducts();
+      if (tabId === 'inventory') loadInventory();
+      if (tabId === 'transactions') { populateTransactionDropdowns(); loadRecentTransactions(); }
+      if (tabId === 'reports') loadReports();
+      if (tabId === 'consumers') loadConsumers();
+      if (tabId === 'grievances') loadGrievances();
+      if (tabId === 'dataset') loadDatasetPage();
+      if (tabId === 'disaster') loadDisasterIntelligence();
+    }
+
+    // ================= DASHBOARD =================
+    async function loadDashboard() {
+      try {
+        const [sumRes, lowRes, grvRes] = await Promise.all([
+          fetch('/api/summary'),
+          fetch('/api/reports/low-stock'),
+          fetch('/api/grievances')
+        ]);
+        const summary = await sumRes.json();
+        const lowStock = await lowRes.json();
+        const grievances = await grvRes.json();
+
+        document.getElementById('dash-stock-count').textContent = summary.sql_metrics.total_inventory_positions;
+        document.getElementById('dash-low-stock').textContent = summary.sql_metrics.low_stock_alerts_count;
+        const consEl = document.getElementById('dash-consumers');
+        if (consEl) consEl.textContent = summary.mongo_metrics.active_consumers_count;
+        document.getElementById('dash-grievances').textContent = summary.mongo_metrics.open_grievances_count;
+        const cwcEl = document.getElementById('dash-cwc-alerts');
+        if (cwcEl) cwcEl.textContent = summary.sql_metrics.cwc_high_alert_count || '0';
+
+        // Render Low Stock
+        const lowBody = document.getElementById('dash-low-stock-body');
+        lowBody.innerHTML = lowStock.length === 0 ? '<tr><td colspan="6" style="text-align:center;">All stock levels optimal.</td></tr>' : '';
+        lowStock.forEach(r => {
+          lowBody.innerHTML += `
+            <tr>
+              <td><strong>${r.product_name}</strong></td>
+              <td><span class="code-chip">${r.sku}</span></td>
+              <td>${r.location_name}</td>
+              <td style="color:var(--accent-rose); font-weight:700;">${r.quantity_on_hand}</td>
+              <td>${r.reorder_level}</td>
+              <td><span class="pill pill-rose">-${r.deficit} units</span></td>
+            </tr>
+          `;
+        });
+
+        // Render Grievances
+        const grvBody = document.getElementById('dash-grievance-body');
+        grvBody.innerHTML = grievances.length === 0 ? '<tr><td colspan="6" style="text-align:center;">Queue is clear.</td></tr>' : '';
+        grievances.slice(0, 5).forEach(g => {
+          const pillClass = g.status === 'OPEN' ? 'pill-rose' : (g.status === 'IN_PROGRESS' ? 'pill-amber' : 'pill-green');
+          grvBody.innerHTML += `
+            <tr>
+              <td><span class="code-chip">${g.grievance_id}</span></td>
+              <td><strong>${g.consumer_id}</strong></td>
+              <td>${g.category}</td>
+              <td><span class="pill pill-rose">${g.priority}</span></td>
+              <td><span class="pill ${pillClass}">${g.status}</span></td>
+              <td>${g.assigned_team}</td>
+            </tr>
+          `;
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // ================= PRODUCTS (SQL CRUD) =================
+    async function loadProducts() {
+      try {
+        const res = await fetch('/api/products');
+        productsCache = await res.json();
+        const tbody = document.getElementById('products-table-body');
+        tbody.innerHTML = '';
+        productsCache.forEach(p => {
+          tbody.innerHTML += `
+            <tr>
+              <td>#${p.product_id}</td>
+              <td><strong>${p.name}</strong></td>
+              <td>${p.category}</td>
+              <td><span class="code-chip">${p.sku}</span></td>
+              <td style="font-weight:700; color:var(--text-heading);">₹${parseFloat(p.unit_price).toFixed(2)}</td>
+              <td>
+                <button class="btn btn-sm btn-rose" onclick="deleteProduct(${p.product_id})">Delete</button>
+              </td>
+            </tr>
+          `;
+        });
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    async function handleCreateProduct(e) {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('p-name').value,
+        category: document.getElementById('p-cat').value,
+        sku: document.getElementById('p-sku').value,
+        unit_price: parseFloat(document.getElementById('p-price').value)
+      };
+      try {
+        const res = await fetch('/api/products', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.detail || 'Failed to create product');
+        showToast(`Product #${json.product_id} created successfully.`);
+        e.target.reset();
+        loadProducts();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm(`Delete product #${id}?`)) return;
+      try {
+        const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.detail || 'Delete failed');
+        showToast('Product deleted.');
+        loadProducts();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    // ================= INVENTORY (SQL JOINS) =================
+    async function loadInventory() {
+      try {
+        const res = await fetch('/api/inventory');
+        const rows = await res.json();
+        const tbody = document.getElementById('inventory-table-body');
+        tbody.innerHTML = rows.length === 0 ? '<tr><td colspan="7" style="text-align:center;">No stock entries recorded.</td></tr>' : '';
+        rows.forEach(r => {
+          let healthPill = '';
+          const qty = Number(r.quantity_on_hand);
+          const reorder = Number(r.reorder_level);
+          if (qty <= reorder) {
+            healthPill = '<span class="pill pill-rose">LOW</span>';
+          } else if (qty <= reorder * 2) {
+            healthPill = '<span class="pill pill-amber">MEDIUM</span>';
+          } else {
+            healthPill = '<span class="pill pill-green">HIGH</span>';
+          }
+          tbody.innerHTML += `
+            <tr>
+              <td><strong>${r.product_name}</strong></td>
+              <td><span class="code-chip">${r.sku}</span></td>
+              <td>₹${parseFloat(r.unit_price).toFixed(2)}</td>
+              <td>${r.location_name}</td>
+              <td style="font-weight:700;">${r.quantity_on_hand}</td>
+              <td>${r.reorder_level}</td>
+              <td>${healthPill}</td>
+            </tr>
+          `;
+        });
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    // ================= TRANSACTIONS (ACID TX) =================
+    async function populateTransactionDropdowns() {
+      const [pRes, sRes, lRes, cRes] = await Promise.all([
+        fetch('/api/products'), fetch('/api/suppliers'),
+        fetch('/api/locations'), fetch('/api/consumers')
+      ]);
+      productsCache = await pRes.json();
+      suppliersCache = await sRes.json();
+      locationsCache = await lRes.json();
+      consumersCache = await cRes.json();
+
+      const prodOpts = productsCache.map(p => `<option value="${p.product_id}">${p.name} (${p.sku})</option>`).join('');
+      const suppOpts = suppliersCache.map(s => `<option value="${s.supplier_id}">${s.name}</option>`).join('');
+      const locOpts = locationsCache.map(l => `<option value="${l.location_id}">${l.name}</option>`).join('');
+      const consOpts = '<option value="">-- Guest / Counter Sale --</option>' + 
+        consumersCache.map(c => `<option value="${c.consumer_id}">${c.name} (${c.consumer_id})</option>`).join('');
+
+      document.getElementById('po-product').innerHTML = prodOpts;
+      document.getElementById('po-supplier').innerHTML = suppOpts;
+      document.getElementById('po-location').innerHTML = locOpts;
+
+      document.getElementById('sale-product').innerHTML = prodOpts;
+      document.getElementById('sale-location').innerHTML = locOpts;
+      document.getElementById('sale-consumer').innerHTML = consOpts;
+
+      document.getElementById('sm-product').innerHTML = prodOpts;
+      document.getElementById('sm-from-loc').innerHTML = locOpts;
+      document.getElementById('sm-to-loc').innerHTML = locOpts;
+    }
+
+    async function handlePurchase(e) {
+      e.preventDefault();
+      const payload = {
+        supplier_id: parseInt(document.getElementById('po-supplier').value),
+        product_id: parseInt(document.getElementById('po-product').value),
+        location_id: parseInt(document.getElementById('po-location').value),
+        quantity_received: parseInt(document.getElementById('po-qty').value)
+      };
+      try {
+        const res = await fetch('/api/purchases', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.detail || 'Purchase transaction failed');
+        showToast(`Purchase Order #${json.purchase_id} recorded.`);
+        e.target.reset();
+        loadRecentTransactions();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    async function handleSale(e) {
+      e.preventDefault();
+      const payload = {
+        product_id: parseInt(document.getElementById('sale-product').value),
+        location_id: parseInt(document.getElementById('sale-location').value),
+        consumer_id: document.getElementById('sale-consumer').value || null,
+        quantity_sold: parseInt(document.getElementById('sale-qty').value)
+      };
+      try {
+        const res = await fetch('/api/sales', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.detail || 'Sale transaction failed');
+        showToast(`Distribution #${json.sale_id} recorded.`);
+        e.target.reset();
+        loadRecentTransactions();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    async function handleMovement(e) {
+      e.preventDefault();
+      const payload = {
+        product_id: parseInt(document.getElementById('sm-product').value),
+        movement_type: document.getElementById('sm-type').value,
+        quantity: parseInt(document.getElementById('sm-qty').value),
+        from_location_id: parseInt(document.getElementById('sm-from-loc').value) || null,
+        to_location_id: parseInt(document.getElementById('sm-to-loc').value) || null
+      };
+      try {
+        const res = await fetch('/api/stock-movements', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.detail || 'Movement failed');
+        showToast(`Stock Movement #${json.movement_id} completed.`);
+        e.target.reset();
+        loadRecentTransactions();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    async function loadRecentTransactions() {
+      const tbody = document.getElementById('tx-recent-body');
+      if (!tbody) return;
+      const filterType = document.getElementById('tx-log-type')?.value || 'all';
+      try {
+        const [puRes, saRes, mvRes] = await Promise.all([
+          fetch('/api/reports/purchases'),
+          fetch('/api/reports/sales'),
+          fetch('/api/reports/stock-movements')
+        ]);
+        const purchases = await puRes.json();
+        const sales = await saRes.json();
+        const movements = await mvRes.json();
+
+        let list = [];
+        if (filterType === 'all' || filterType === 'purchases') {
+          purchases.forEach(p => list.push({
+            date: p.purchase_date,
+            type: 'PURCHASE',
+            badgeClass: 'pill-green',
+            product: p.product_name,
+            sku: p.sku,
+            qty: '+' + p.quantity_received,
+            party: 'Supplier: ' + p.supplier_name + ' -> ' + p.location_name,
+            val: '₹' + parseFloat(p.estimated_value || 0).toFixed(2)
+          }));
+        }
+        if (filterType === 'all' || filterType === 'sales') {
+          sales.forEach(s => list.push({
+            date: s.sale_date,
+            type: 'SALE',
+            badgeClass: 'pill-blue',
+            product: s.product_name,
+            sku: s.sku,
+            qty: '-' + s.quantity_sold,
+            party: 'Location: ' + s.location_name + (s.consumer_id ? ' (' + s.consumer_id + ')' : ''),
+            val: '₹' + parseFloat(s.total_revenue || 0).toFixed(2)
+          }));
+        }
+        if (filterType === 'all' || filterType === 'movements') {
+          movements.forEach(m => list.push({
+            date: m.movement_date,
+            type: m.movement_type,
+            badgeClass: 'pill-purple',
+            product: m.product_name,
+            sku: m.sku,
+            qty: '' + m.quantity,
+            party: m.from_location_name + ' -> ' + m.to_location_name,
+            val: '-'
+          }));
+        }
+
+        list.sort((a, b) => new Date(b.date) - new Date(a.date));
+        tbody.innerHTML = list.length === 0 ? '<tr><td colspan="7" style="text-align:center;">No transaction entries found.</td></tr>' : '';
+        list.slice(0, 20).forEach(item => {
+          tbody.innerHTML += `
+            <tr>
+              <td><span style="font-size:0.75rem; color:var(--text-muted);">${new Date(item.date).toLocaleString()}</span></td>
+              <td><span class="pill ${item.badgeClass}">${item.type}</span></td>
+              <td><strong>${item.product}</strong></td>
+              <td><span class="code-chip">${item.sku}</span></td>
+              <td style="font-weight:700;">${item.qty}</td>
+              <td style="font-size:0.8rem;">${item.party}</td>
+              <td style="font-weight:700;">${item.val}</td>
+            </tr>
+          `;
+        });
+      } catch (err) {
+        console.error('Failed to load recent transactions:', err);
+      }
+    }
+
+    // ================= REPORTS (SQL AGGREGATES) =================
+    async function loadReports() {
+      try {
+        const [locRes, supRes, salRes] = await Promise.all([
+          fetch('/api/reports/stock-by-location'),
+          fetch('/api/reports/supplier-purchases'),
+          fetch('/api/reports/sales-by-product')
+        ]);
+        const locData = await locRes.json();
+        const supData = await supRes.json();
+        const salData = await salRes.json();
+
+        // Location Stock
+        const tLoc = document.getElementById('rep-loc-body');
+        tLoc.innerHTML = '';
+        locData.forEach(r => {
+          tLoc.innerHTML += `
+            <tr>
+              <td>#${r.location_id}</td>
+              <td><strong>${r.location_name}</strong></td>
+              <td>${r.distinct_products_count}</td>
+              <td style="font-weight:700;">${r.total_units_in_stock}</td>
+            </tr>
+          `;
+        });
+
+        // Supplier Volume
+        const tSup = document.getElementById('rep-sup-body');
+        tSup.innerHTML = '';
+        supData.forEach(r => {
+          tSup.innerHTML += `
+            <tr>
+              <td>#${r.supplier_id}</td>
+              <td><strong>${r.supplier_name}</strong></td>
+              <td>${r.total_orders}</td>
+              <td style="font-weight:700;">${r.total_units_supplied}</td>
+            </tr>
+          `;
+        });
+
+        // Sales Revenue
+        const tSal = document.getElementById('rep-sales-body');
+        tSal.innerHTML = '';
+        salData.forEach(r => {
+          tSal.innerHTML += `
+            <tr>
+              <td><strong>${r.product_name}</strong></td>
+              <td><span class="code-chip">${r.sku}</span></td>
+              <td>${r.category}</td>
+              <td style="font-weight:700;">${r.total_quantity_sold}</td>
+              <td style="color:var(--accent-green); font-weight:700;">₹${parseFloat(r.total_sales_revenue).toFixed(2)}</td>
+            </tr>
+          `;
+        });
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    // ================= CONSUMERS (MONGODB CRUD) =================
+    function renderConsumers() {
+      const q = (document.getElementById('search-consumers')?.value || '').toLowerCase().trim();
+      const statusFilter = document.getElementById('filter-c-status')?.value || '';
+      const tbody = document.getElementById('consumers-table-body');
+      if (!tbody) return;
+
+      const filtered = consumersCache.filter(c => {
+        const matchesQuery = !q || 
+          (c.name || '').toLowerCase().includes(q) || 
+          (c.consumer_id || '').toLowerCase().includes(q) || 
+          (c.contact || '').toLowerCase().includes(q) ||
+          (c.address || '').toLowerCase().includes(q);
+        const matchesStatus = !statusFilter || c.verification_status === statusFilter;
+        return matchesQuery && matchesStatus;
+      });
+
+      tbody.innerHTML = filtered.length === 0 
+        ? '<tr><td colspan="7" style="text-align:center; padding: 1.5rem; color: var(--text-muted);">No beneficiaries match search criteria.</td></tr>' 
+        : '';
+
+      filtered.forEach(c => {
+        tbody.innerHTML += `
+          <tr>
+            <td><span class="code-chip">${c.consumer_id}</span></td>
+            <td><strong>${c.name}</strong></td>
+            <td>${c.contact}</td>
+            <td>${c.preferences || 'None'}</td>
+            <td><span class="pill ${c.verification_status === 'VERIFIED' ? 'pill-green' : 'pill-amber'}">${c.verification_status}</span></td>
+            <td>${new Date(c.onboarding_date).toLocaleDateString()}</td>
+            <td>
+              <button class="btn btn-sm btn-rose" onclick="deleteConsumer('${c.consumer_id}')">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function loadConsumers() {
+      try {
+        const res = await fetch('/api/consumers');
+        consumersCache = await res.json();
+        
+        // Update metric counters
+        const total = consumersCache.length;
+        const verified = consumersCache.filter(c => c.verification_status === 'VERIFIED').length;
+        const pending = total - verified;
+        const elTotal = document.getElementById('cons-metric-total');
+        const elVer = document.getElementById('cons-metric-verified');
+        const elPen = document.getElementById('cons-metric-pending');
+        if (elTotal) elTotal.textContent = total;
+        if (elVer) elVer.textContent = verified;
+        if (elPen) elPen.textContent = pending;
+
+        renderConsumers();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    async function handleCreateConsumer(e) {
+      e.preventDefault();
+      const payload = {
+        consumer_id: document.getElementById('c-id').value,
+        name: document.getElementById('c-name').value,
+        contact: document.getElementById('c-contact').value,
+        preferences: document.getElementById('c-prefs').value,
+        address: document.getElementById('c-addr').value,
+        district: document.getElementById('c-district')?.value || '',
+        flood_event_id: document.getElementById('c-event')?.value || '',
+        vulnerability_category: document.getElementById('c-vuln')?.value || 'GENERAL'
+      };
+      try {
+        const res = await fetch('/api/consumers', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.detail || 'Consumer creation failed');
+        showToast(`Beneficiary ${payload.consumer_id} registered successfully.`);
+        e.target.reset();
+        loadConsumers();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    async function deleteConsumer(cid) {
+      if (!confirm(`Delete beneficiary ${cid}?`)) return;
+      try {
+        const res = await fetch(`/api/consumers/${cid}`, { method: 'DELETE' });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.detail || 'Deletion failed');
+        showToast('Beneficiary profile deleted.');
+        loadConsumers();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    // ================= GRIEVANCES (MONGODB LIFECYCLE) =================
+    let grievancesCache = [];
+
+    function renderGrievances() {
+      const q = (document.getElementById('search-grievances')?.value || '').toLowerCase().trim();
+      const tbody = document.getElementById('grievances-table-body');
+      if (!tbody) return;
+
+      const filtered = grievancesCache.filter(g => {
+        if (!q) return true;
+        return (g.grievance_id || '').toLowerCase().includes(q) ||
+               (g.consumer_id || '').toLowerCase().includes(q) ||
+               (g.category || '').toLowerCase().includes(q) ||
+               (g.description || '').toLowerCase().includes(q) ||
+               (g.assigned_team || '').toLowerCase().includes(q);
+      });
+
+      tbody.innerHTML = filtered.length === 0 
+        ? '<tr><td colspan="8" style="text-align:center; padding: 1.5rem; color: var(--text-muted);">No grievances match search criteria.</td></tr>' 
+        : '';
+
+      filtered.forEach(g => {
+        const pillClass = g.status === 'OPEN' ? 'pill-rose' : (g.status === 'IN_PROGRESS' ? 'pill-amber' : 'pill-green');
+        const prioClass = (g.priority === 'CRITICAL' || g.priority === 'HIGH') ? 'pill-rose' : (g.priority === 'MEDIUM' ? 'pill-amber' : 'pill-green');
+        tbody.innerHTML += `
+          <tr>
+            <td><span class="code-chip">${g.grievance_id}</span></td>
+            <td><strong>${g.consumer_id}</strong></td>
+            <td>${g.category}</td>
+            <td style="max-width: 280px; word-break: break-word;">${g.description}</td>
+            <td><span class="pill ${prioClass}">${g.priority}</span></td>
+            <td><span class="pill ${pillClass}">${g.status}</span></td>
+            <td>${g.assigned_team}</td>
+            <td>
+              <button class="btn btn-sm btn-indigo" onclick="openGrievanceModal('${g.grievance_id}')">Update</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    async function loadGrievances() {
+      try {
+        const status = document.getElementById('filter-g-status').value;
+        const prio = document.getElementById('filter-g-prio').value;
+        let url = '/api/grievances?';
+        if (status) url += `status=${status}&`;
+        if (prio) url += `priority=${prio}&`;
+
+        // Also fetch all grievances once to calculate metrics accurately
+        const [gRes, allRes, cRes] = await Promise.all([
+          fetch(url),
+          fetch('/api/grievances'),
+          fetch('/api/consumers')
+        ]);
+        grievancesCache = await gRes.json();
+        const allGrievances = await allRes.json();
+        consumersCache = await cRes.json();
+
+        // Populate dropdown
+        const cSelect = document.getElementById('g-consumer-id');
+        if (cSelect) {
+          cSelect.innerHTML = consumersCache.map(c => `<option value="${c.consumer_id}">${c.name} (${c.consumer_id})</option>`).join('');
+        }
+
+        // Calculate and render grievance metric cards
+        const total = allGrievances.length;
+        const openCount = allGrievances.filter(g => g.status === 'OPEN').length;
+        const progCount = allGrievances.filter(g => g.status === 'IN_PROGRESS').length;
+        const resCount = allGrievances.filter(g => g.status === 'RESOLVED').length;
+
+        const elTot = document.getElementById('grv-metric-total');
+        const elOp = document.getElementById('grv-metric-open');
+        const elPr = document.getElementById('grv-metric-prog');
+        const elRe = document.getElementById('grv-metric-resolved');
+        if (elTot) elTot.textContent = total;
+        if (elOp) elOp.textContent = openCount;
+        if (elPr) elPr.textContent = progCount;
+        if (elRe) elRe.textContent = resCount;
+
+        renderGrievances();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    async function handleCreateGrievance(e) {
+      e.preventDefault();
+      const payload = {
+        grievance_id: document.getElementById('g-id').value,
+        consumer_id: document.getElementById('g-consumer-id').value,
+        category: document.getElementById('g-category').value,
+        priority: document.getElementById('g-priority').value,
+        assigned_team: document.getElementById('g-team').value,
+        description: document.getElementById('g-desc').value,
+        affected_location: document.getElementById('g-loc')?.value || '',
+        flood_event_id: document.getElementById('g-event')?.value || ''
+      };
+      try {
+        const res = await fetch('/api/grievances', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.detail || 'Ticket filing failed');
+        showToast(`Ticket ${payload.grievance_id} filed successfully.`);
+        e.target.reset();
+        loadGrievances();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    async function openGrievanceModal(gid) {
+      try {
+        const res = await fetch(`/api/grievances/${gid}`);
+        const g = await res.json();
+        document.getElementById('modal-g-id').value = g.grievance_id;
+        document.getElementById('modal-g-title').textContent = `Manage Grievance ${g.grievance_id}`;
+        document.getElementById('modal-g-status').value = g.status;
+        document.getElementById('modal-g-team').value = g.assigned_team || '';
+        document.getElementById('modal-g-resolution').value = g.resolution || '';
+        document.getElementById('modal-g-note').value = '';
+
+        const tl = document.getElementById('modal-g-timeline');
+        tl.innerHTML = '';
+        (g.updates || []).forEach(u => {
+          tl.innerHTML += `
+            <div class="timeline-node">
+              <div style="font-size:0.72rem; color:var(--text-muted); font-weight:600;">
+                ${new Date(u.timestamp).toLocaleString()} &bull; Staff: ${u.staff_id} &bull; <span class="pill pill-blue">${u.status}</span>
+              </div>
+              <div style="font-size:0.84rem; margin-top:0.25rem; color:var(--text-heading); font-weight:500;">
+                ${u.note}
+              </div>
+            </div>
+          `;
+        });
+
+        document.getElementById('modal-g-overlay').classList.add('active');
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    function closeGrievanceModal() {
+      document.getElementById('modal-g-overlay').classList.remove('active');
+    }
+
+    async function handleUpdateGrievance(e) {
+      e.preventDefault();
+      const gid = document.getElementById('modal-g-id').value;
+      const payload = {
+        status: document.getElementById('modal-g-status').value,
+        assigned_team: document.getElementById('modal-g-team').value,
+        resolution: document.getElementById('modal-g-resolution').value || null,
+        update_note: document.getElementById('modal-g-note').value || undefined,
+        staff_id: "STAFF-OPS"
+      };
+      try {
+        const res = await fetch(`/api/grievances/${gid}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.detail || 'Update failed');
+        showToast(`Grievance ${gid} updated successfully.`);
+        closeGrievanceModal();
+        loadGrievances();
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    // ================= ABOUT DATASET & VISUALS =================
+    function renderGaugeVisualizer(telemetry) {
+      const container = document.getElementById('dataset-gauge-meters');
+      if (!container) return;
+      container.innerHTML = '';
+
+      telemetry.forEach(t => {
+        const cur = parseFloat(t.current_water_level_meters) || 0;
+        const dng = parseFloat(t.danger_level_meters) || 1;
+        const ratio = (cur / dng) * 100;
+        const barWidth = Math.min(Math.max(ratio, 8), 100);
+        const isAboveDanger = cur >= dng;
+        const diff = (cur - dng).toFixed(2);
+
+        let statusPill = '';
+        let fillClass = 'gauge-fill-normal';
+
+        if (t.alert_level === 'EXTREME' || t.alert_level === 'DANGER' || isAboveDanger) {
+          fillClass = 'gauge-fill-danger';
+          statusPill = `<span class="pill pill-rose">Danger Exceeded (+${Math.abs(diff)}m)</span>`;
+        } else if (t.alert_level === 'WARNING' || ratio >= 85) {
+          fillClass = 'gauge-fill-warning';
+          statusPill = `<span class="pill pill-amber">Near Danger Mark (${diff}m)</span>`;
+        } else {
+          fillClass = 'gauge-fill-normal';
+          statusPill = `<span class="pill pill-green">Safe Freeboard (${Math.abs(diff)}m margin)</span>`;
+        }
+
+        container.innerHTML += `
+          <div class="gauge-card">
+            <div class="gauge-header">
+              <div>
+                <strong style="color: var(--text-heading); font-size: 0.95rem;">${t.station_name}</strong>
+                <span class="code-chip" style="font-size: 0.7rem; margin-left: 0.35rem;">${t.station_id}</span>
+                <span style="font-size: 0.8rem; color: var(--text-muted); margin-left: 0.5rem;">${t.river_basin} &bull; ${t.state_or_region}</span>
+              </div>
+              <div>${statusPill}</div>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 700; margin-bottom: 0.35rem;">
+              <span>Current River Stage: <span style="${isAboveDanger ? 'color: var(--accent-rose); font-weight: 800;' : 'color: var(--primary);'}">${cur.toFixed(2)}m</span></span>
+              <span style="color: var(--text-muted);">Official Danger Mark: <strong>${dng.toFixed(2)}m</strong></span>
+            </div>
+
+            <div class="gauge-track">
+              <div class="gauge-fill ${fillClass}" style="width: ${barWidth}%;"></div>
+            </div>
+
+            <div class="gauge-meta-row">
+              <span>Hourly Precipitation: <strong style="color: var(--text-heading);">${t.hourly_rainfall_mm} mm</strong></span>
+              <span>24h Cumulative: <strong style="color: var(--text-heading);">${t.cumulative_24h_mm} mm</strong></span>
+              <span>Gauge Alert Status: <strong style="color: var(--text-heading);">${t.alert_level}</strong></span>
+              <span>Source: <em style="color: var(--text-muted);">${t.source_dataset}</em></span>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function renderDisasterScaleVisualizer(floodEvents, crossData) {
+      const container = document.getElementById('dataset-disaster-bars');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const maxPop = Math.max(...floodEvents.map(e => Number(e.displaced_population) || 0), 1);
+      const reportsMap = {};
+      if (crossData && crossData.cross_database_disaster_reports) {
+        crossData.cross_database_disaster_reports.forEach(r => {
+          reportsMap[r.event_id] = r;
+        });
+      }
+
+      const sorted = [...floodEvents].sort((a, b) => (Number(b.displaced_population) || 0) - (Number(a.displaced_population) || 0));
+
+      sorted.forEach(ev => {
+        const pop = Number(ev.displaced_population) || 0;
+        const barWidth = Math.max((pop / maxPop) * 100, 4);
+        const cr = reportsMap[ev.event_id];
+        const unitsDispatched = cr ? cr.sql_relief_units_dispatched : 0;
+        const benCount = cr ? cr.mongo_beneficiaries_onboarded : 0;
+
+        let barColor = 'linear-gradient(90deg, #0284c7 0%, #38bdf8 100%)';
+        if (ev.severity === 'CATASTROPHIC') {
+          barColor = 'linear-gradient(90deg, #e11d48 0%, #fb7185 100%)';
+        } else if (ev.severity === 'SEVERE') {
+          barColor = 'linear-gradient(90deg, #d97706 0%, #fbbf24 100%)';
+        }
+
+        container.innerHTML += `
+          <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.1rem; margin-bottom: 0.85rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+              <div>
+                <strong style="color: var(--text-heading); font-size: 0.95rem;">${ev.event_name}</strong>
+                <span class="code-chip" style="font-size: 0.72rem; margin-left: 0.35rem;">${ev.event_id}</span>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">
+                  ${ev.country} &bull; ${ev.state_province} &bull; <em>${ev.river_basin}</em> (${ev.start_date} to ${ev.end_date})
+                </div>
+              </div>
+              <div style="display: flex; gap: 0.4rem; align-items: center;">
+                <span class="pill ${ev.severity === 'CATASTROPHIC' ? 'pill-rose' : 'pill-amber'}">${ev.severity}</span>
+                <span class="pill pill-blue">${ev.country}</span>
+              </div>
+            </div>
+
+            <div style="margin: 0.65rem 0;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; font-weight: 700; margin-bottom: 0.25rem;">
+                <span>Displaced Population Impact</span>
+                <span style="color: var(--text-heading); font-size: 0.85rem;">${pop.toLocaleString()} people</span>
+              </div>
+              <div style="height: 12px; background: #e2e8f0; border-radius: 6px; overflow: hidden;">
+                <div style="width: ${barWidth}%; height: 100%; border-radius: 6px; background: ${barColor}; transition: width 0.6s ease;"></div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted); flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px dashed var(--border-color);">
+              <div>
+                <span>Reported Casualties: <strong style="color: var(--accent-rose);">${ev.casualties}</strong></span>
+              </div>
+              <div style="display: flex; gap: 0.6rem;">
+                <span>Relief Dispatched: <strong style="color: var(--primary);">${unitsDispatched} units</strong></span>
+                <span>Beneficiaries: <strong style="color: var(--text-heading);">${benCount}</strong></span>
+              </div>
+              <div>
+                <span>Dataset: <em>${ev.source_dataset}</em></span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    async function loadDatasetPage() {
+      try {
+        const [telRes, feRes, crossRes] = await Promise.all([
+          fetch('/api/rainfall-telemetry'),
+          fetch('/api/flood-events'),
+          fetch('/api/reports/cross-database-disaster')
+        ]);
+        const telemetry = await telRes.json();
+        const floodEvents = await feRes.json();
+        const crossData = await crossRes.json();
+
+        // 1. Render Live Gauge Visualizer Bars
+        renderGaugeVisualizer(telemetry);
+
+        // 2. Render Historical Disaster Scale Visualizer
+        renderDisasterScaleVisualizer(floodEvents, crossData);
+      } catch (err) {
+        console.error('Error loading dataset page:', err);
+        showToast('Error loading dataset telemetry', true);
+      }
+    }
+
+
+    // ================= DISASTER & FLOOD INTELLIGENCE =================
+    async function loadDisasterIntelligence() {
+      try {
+        const [telRes, xRes] = await Promise.all([
+          fetch('/api/rainfall-telemetry'),
+          fetch('/api/reports/cross-database-disaster')
+        ]);
+        const telemetry = await telRes.json();
+        const crossData = await xRes.json();
+
+        // 1. Render Compact Telemetry Table
+        const telBody = document.getElementById('telemetry-table-body');
+        if (telBody) {
+          telBody.innerHTML = '';
+          telemetry.forEach(t => {
+            let pillClass = 'pill-green';
+            if (t.alert_level === 'EXTREME' || t.alert_level === 'DANGER') pillClass = 'pill-rose';
+            else if (t.alert_level === 'WARNING' || t.alert_level === 'ADVISORY') pillClass = 'pill-amber';
+
+            const isAboveDanger = Number(t.current_water_level_meters) >= Number(t.danger_level_meters);
+            const levelStyle = isAboveDanger ? 'color: var(--accent-rose); font-weight: 800;' : 'font-weight: 700; color: var(--text-heading);';
+
+            telBody.innerHTML += `
+              <tr>
+                <td><strong>${t.station_name}</strong> <span class="code-chip" style="font-size:0.7rem;">${t.station_id}</span></td>
+                <td>${t.state_or_region} &bull; <span style="color:var(--text-muted); font-size:0.8rem;">${t.river_basin}</span></td>
+                <td><strong>${t.hourly_rainfall_mm} mm</strong></td>
+                <td>${t.cumulative_24h_mm} mm</td>
+                <td><span style="${levelStyle}">${t.current_water_level_meters}m</span> / <span style="color:var(--text-muted); font-size:0.8rem;">${t.danger_level_meters}m</span></td>
+                <td><span class="pill ${pillClass}">${t.alert_level}</span></td>
+              </tr>
+            `;
+          });
+        }
+
+        // 2. Render Unified Flood Events & Hybrid Operations
+        const uniBody = document.getElementById('unified-disaster-table-body');
+        if (uniBody && crossData.cross_database_disaster_reports) {
+          uniBody.innerHTML = '';
+          crossData.cross_database_disaster_reports.forEach(r => {
+            const sevClass = (r.severity === 'CATASTROPHIC' || r.severity === 'SEVERE') ? 'pill-rose' : 'pill-amber';
+            uniBody.innerHTML += `
+              <tr>
+                <td><span class="code-chip">${r.event_id}</span></td>
+                <td>
+                  <strong>${r.event_name}</strong>
+                  ${r.geospatial_notes ? `<div style="font-size:0.75rem; color:var(--text-muted); max-width: 320px; margin-top:2px; line-height:1.3;">${r.geospatial_notes}</div>` : ''}
+                </td>
+                <td><span class="pill pill-blue">${r.country}</span> ${r.state_province} &bull; <span style="font-size:0.78rem; color:var(--text-muted);">${r.river_basin}</span></td>
+                <td><span class="pill ${sevClass}">${r.severity}</span></td>
+                <td style="font-weight:700;">${Number(r.displaced_population).toLocaleString()}</td>
+                <td>
+                  <strong style="color:var(--primary);">${r.sql_relief_units_dispatched} units</strong>
+                  <div style="font-size:0.75rem; color:var(--text-muted);">₹${parseFloat(r.sql_relief_total_value || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</div>
+                </td>
+                <td>
+                  <span class="pill pill-green">${r.mongo_beneficiaries_onboarded} Beneficiaries</span>
+                  <span class="pill ${r.mongo_active_grievances > 0 ? 'pill-rose' : 'pill-green'}">${r.mongo_active_grievances} Tickets</span>
+                </td>
+                <td style="font-size:0.75rem; color:var(--text-muted); max-width: 140px;">${r.source_dataset}</td>
+              </tr>
+            `;
+          });
+        }
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    }
+
+    // Init
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDashboard();
+    });
+  </script>
+</body>
+</html>
